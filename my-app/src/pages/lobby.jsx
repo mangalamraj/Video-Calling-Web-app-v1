@@ -35,6 +35,7 @@ const Lobby =() =>{
                 </div>
           </main>
           </div>
+            made by MANGO
         </div>
         
     )
