@@ -1,5 +1,5 @@
 #videos{
-  display: grid;
+  display: flex;
   grid-template-columns: 1fr 1fr;
   gap:2em;
 }
@@ -11,4 +11,10 @@
 
 #user-2{
   display: none;
+}
+@media (max-width:700px) {
+  #videos{
+     flex-direction: column;
+    
+  }
 }

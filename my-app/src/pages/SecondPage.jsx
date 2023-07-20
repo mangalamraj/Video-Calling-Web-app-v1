@@ -49,7 +49,7 @@ This code is useful when you want to extract query parameters from the URL, espe
 
     client.on('MessageFromPeer',handleMessageFromPeer)//it helps to start a function that will act as event listener of a message sent by the peer
 
-    localStream = await navigator.mediaDevices.getUserMedia({video:true,audio:false})
+    localStream = await navigator.mediaDevices.getUserMedia({video:true,audio:true})
     document.getElementById("user-1").srcObject = localStream //video tag has a property called srcObject
     
   }
