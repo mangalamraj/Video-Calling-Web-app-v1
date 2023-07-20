@@ -1,7 +1,7 @@
 
-import './App.css';
+import './secondpage.css';
 import AgoraRTM from 'agora-rtm-sdk'
-function App() {
+const SecondPage=()=> {
 
   let APP_ID = "c5db1eabdbb9431784306991c6fa6880"
 
@@ -10,6 +10,20 @@ function App() {
 
   let client;
   let channel;
+
+  let queryString = window.location.search             
+  let urlParams = new URLSearchParams(queryString)
+  let roomId=urlParams.get('room')
+
+  if(!roomId){
+    window.location="./Lobby"
+  }
+  /*eters of a URL. It takes the queryString as an argument, which is the value obtained from window.location.search.
+urlParams.get('room'): The get() method of the URLSearchParams object is used to retrieve the value of a specific query parameter. In this case, it fetches the value associated with the key "room" in the query parameters.
+The value of roomId will be the content of the "room" query parameter from the current URL. For example, if the current URL is https://example.com/second?room=12345, then roomId will be assigned the value "12345", assuming that the "room" query parameter is present in the URL.
+
+This code is useful when you want to extract query parameters from the URL, especially in cases where you need to pass data or configuration to a specific page or component using query parameters.*/
+
 
   let localStream; //for my
   let remoteStream; //for friends
@@ -27,7 +41,7 @@ function App() {
     client = await AgoraRTM.createInstance(APP_ID);
     await client.login({uid,token})
 
-    channel = client.createChannel('main')//this will find a channel name main or create it
+    channel = client.createChannel(roomId)//this will find a channel name main or create it
     await channel.join()// .join function of agora helps the peer to join the channel.
 
     channel.on('MemberJoined',handleUserJoined)//checks for other user on the channel{.on function does that}
@@ -136,4 +150,4 @@ function App() {
   );
 }
 
-export default App;
+export default SecondPage;
