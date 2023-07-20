@@ -30,6 +30,7 @@ const Lobby =() =>{
                     <form id="join-form">
             <input type="text" name="invite_link" required></input>
             <input type="submit" value="Join Room"></input>
+            <center style={{padding:"1em",paddingTop:"2em"}}>Made By MANGO</center>
         </form>  
                     </div>
                 </div>
