@@ -37,6 +37,14 @@ This code is useful when you want to extract query parameters from the URL, espe
     ]
   }
 
+  let constraints = {
+    video:{
+      width:{min:640,ideal:1920},
+      height:{min:480,ideal:1080},
+    },
+    audio:true
+  }
+
   let init = async () =>{
     client = await AgoraRTM.createInstance(APP_ID);
     await client.login({uid,token})
@@ -49,13 +57,14 @@ This code is useful when you want to extract query parameters from the URL, espe
 
     client.on('MessageFromPeer',handleMessageFromPeer)//it helps to start a function that will act as event listener of a message sent by the peer
 
-    localStream = await navigator.mediaDevices.getUserMedia({video:true,audio:true})
+    localStream = await navigator.mediaDevices.getUserMedia(constraints)
     document.getElementById("user-1").srcObject = localStream //video tag has a property called srcObject
     
   }
 
   let handleUserLeft=(MemberId)=>{
     document.getElementById('user-2').style.display="none";
+    document.getElementById("user-1").classList.remove('smallFrame')
   }
 
   let handleMessageFromPeer = async(message,MemberId) =>{
@@ -86,6 +95,8 @@ This code is useful when you want to extract query parameters from the URL, espe
     document.getElementById("user-2").srcObject = remoteStream
     document.getElementById("user-2").style.display="block"
     
+    document.getElementById("user-1").classList.add('smallFrame')
+
     if(!localStream){ //fix for "on fast refresh error occur due to null value passed in video and audio as it takes time"
       localStream = await navigator.mediaDevices.getUserMedia({video:true,audio:false})
     document.getElementById("user-1").srcObject = localStream
@@ -134,6 +145,29 @@ This code is useful when you want to extract query parameters from the URL, espe
     await channel.leave()
     await client.logout()
   }
+
+  let toggleCamera = async () =>{
+    let videoTrack = localStream.getTracks().find(track=>track.kind === 'video')
+    if(videoTrack.enabled){
+      videoTrack.enabled = false
+      document.getElementById('camera-btn').style.backgroundColor='rgb(255,80,80)'
+    }else{
+      videoTrack.enabled = true
+      document.getElementById('camera-btn').style.backgroundColor='rgb(179,102,249,.9)'
+    }
+  }
+
+  let toggleMic = async () =>{
+    let audioTrack = localStream.getTracks().find(track=>track.kind === 'audio')
+    if(audioTrack.enabled){
+      audioTrack.enabled = false
+      document.getElementById('mic-btn').style.backgroundColor='rgb(255,80,80)'
+    }else{
+      audioTrack.enabled = true
+      document.getElementById('mic-btn').style.backgroundColor='rgb(179,102,249,.9)'
+    }
+  }
+
   window.addEventListener('beforeunload',leaveChannel)
 
   init()
@@ -144,6 +178,20 @@ This code is useful when you want to extract query parameters from the URL, espe
       <div id='videos' >
       <video id="user-1" className="video-player" autoPlay playsInline></video>
       <video id="user-2" className="video-player" autoPlay playsInline></video>
+      </div>
+
+      <div id='controls'>
+          <div className='control-container' id="camera-btn" onClick={toggleCamera}>
+            <img src='images/camera.png'/>
+          </div>
+          <div className='control-container' id="mic-btn" onClick={toggleMic}>
+            <img src='images/mic.png'/>
+          </div>
+          <a href='/'>
+          <div className='control-container' id="leave-btn">
+            <img src='images/phone.png'/>
+          </div>
+          </a>
       </div>
 
     </div>
